@@ -35,11 +35,10 @@ Read this section, but do NOT include it your final README.
 {Describe input files and how they will be processed in order for the method to work. Describe how sample tables have to look like, and any other input that is needed (e.g. genome).}
 
 Aptardi requires the following input files:
-i. DNA sequence reference genome
-    a. Reference genome file with headers as chromosomes or
-    b. A user generated sample-specific genome
-ii. sorted bam file.
-iii. input gtf file
+
+- *DNA sequence reference genome (.fasta)*
+- *sorted bam file (as output from StringTie, STAR, or similar)*
+- *input gtf file*
     a. Reconstruction gtf that consider expression (i.e. StringTie)
     b. Reference annotation (i.e. Ensembl)
 
@@ -52,11 +51,13 @@ iii. input gtf file
 
 {Describe output files and postprocessing steps if necessary.}
 
-The output of Aptardi is a new gtf file. This new file incorporates transcripts identified by Aptardi. For compatibility with other programs, we have added a step to convert the gtf to a bedfile format.
+The output of Aptardi is a gtf/gff file. The output includes all original transcript structures from the original transcriptome, in addition to the annotation identified by the program. For compatibility with other programs, we have added a step to convert the gtf to a bedfile format.
+
 
 ## Notes
 
 {Notes about the METHOD.
 e.g. Did you have to adjust the method's source code?}
 
-Aptardi does not evaluate intron junctions. It only evaluates 3'terminal exons and annotates the ends of these transcripts.
+- Aptardi does not evaluate intron junctions. It only evaluates 3'terminal exons and annotates the ends of these transcripts.
+- The built-in model defines 
