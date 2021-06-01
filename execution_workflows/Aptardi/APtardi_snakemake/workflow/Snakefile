@@ -1,0 +1,149 @@
+"""Snakemake pipeline for [METHOD].
+For help see: https://snakemake.readthedocs.io/en/stable/index.html.
+"""
+
+import pandas as pd
+
+samples = pd.read_csv(os.path.abspath(
+    config["samples"])).set_index("sample", drop=False)
+
+
+#-------------------------------------------------------------------------------
+localrules: finish
+
+rule finish:
+    """Rule that specifies the final output.
+    """
+    input:
+        os.path.join(config["out_dir"], "[IDENTIFIER]_[METHOD].[OUTFORMAT]")
+
+
+#-------------------------------------------------------------------------------
+# Preprocessing: obtain suitable input formats
+
+rule preprocess_step_1:
+    """A rule that does some preprocessing.
+    This example copies input to output and writes stdout and stderr to log.
+    """
+    input:
+        INPUT_FILE
+    output:
+        OUTPUT_FILE
+    log:
+        os.path.join(config["local_log"], "preprocess_step_1.log")
+    shell:
+        "(cp {input} {output}) &> {log}"
+
+
+#-------------------------------------------------------------------------------
+# Method-specific rules
+
+rule execute_container:
+    """Execution rule in a container (e.g. Dockerfile).
+    """
+    input:
+        bam=lambda wildcards:
+                pd.Series(
+                    samples.loc[wildcards.sample, "bam"]
+                ).values
+    output:
+        out=os.path.join(config["out_dir"], "{sample}", "execute.out")
+    params:
+        param1 = 0,
+        param2 = "PARAM_STRING"
+    threads: 4
+    container: # OR URL/TO/CONTAINER
+        os.path.join(config["envs"], "[METHOD].Dockerfile")
+    log:
+        os.path.join(config["local_log"], "execute.{sample}.log")
+    shell:
+        "(EXECUTE_COMMAND \
+            -i {input.bam} \
+            -o {output.out} \
+            -p1 {params.param1} \
+            -p2 {params.param2}) \
+            &> {log}"
+
+rule execute_conda:
+    """Execution rule with conda environment.
+    """
+    input:
+        bam=lambda wildcards:
+                pd.Series(
+                    samples.loc[wildcards.sample, "bam"]
+                ).values
+    output:
+        out=os.path.join(config["out_dir"], "{sample}", "execute.out")
+    params:
+        param1 = 0,
+        param2 = "PARAM_STRING"
+    threads: 4
+    conda:
+        os.path.join(config["envs"], "[METHOD].yaml")
+    log:
+        os.path.join(config["local_log"], "execute.{sample}.log")
+    shell:
+        "(EXECUTE_COMMAND \
+            -i {input.bam} \
+            -o {output.out} \
+            -p1 {params.param1} \
+            -p2 {params.param2}) \
+            &> {log}"
+
+
+#-------------------------------------------------------------------------------
+# Postprocessing: obtain suitable output formats (for benchmarks)
+
+rule postprocess_step_1:
+    """A rule that does some postprocessing.
+
+    Note: expand() with wildcard sample gathers all samples.
+
+    """
+    input:
+        expand(os.path.join(config["out_dir"], "{sample}", "execute.out"),
+            sample = samples.index)
+    output:
+        os.path.join(config["out_dir"], "[IDENTIFIER]_[METHOD].[OUTFORMAT]")
+    log:
+        os.path.join(config["local_log"], "postprocess_step_1.{sample}.log")
+    shell:
+        "(cat {input} {output}) &> {log}"
+
+#-------------------------------------------------------------------------------
+# Postprocessing: benchmark
+
+rule benchmark_Q1:
+    """Obtain runtime and max memory usage
+    Per sample, obtain the runtime and max memory from the benchmarked file
+    and compute sum of individual runtimes and max of all max memories.
+
+    """
+    input:
+        T1=os.path.join(config["out_dir"], config["benchmarks"], "index.tsv"),
+        T2=expand(os.path.join(config["out_dir"], config["benchmarks"], "execute.{sample}.tsv"),
+            sample = samples.index)
+    output:
+        os.path.join(config["out_dir"], config["benchmarks"], "benchmark.Q1_aptardi.json")
+    run:
+        import pandas as pd
+        import json
+        res = {'run_time_sec': 0, 'max_mem_mib': 0}
+        for file in input:
+            df = pd.read_table(file, sep="\t", header = 0)
+            res['run_time_sec'] += df.s.values.mean()
+            max_mem = df.max_pss.max()
+            if type(max_mem) is not int:
+                continue
+            if max_mem > res['max_mem_mib']:
+                res['max_mem_mib'] = max_mem
+        with open(output[0], 'w') as json_file:
+            json.dump(res, json_file, indent = 4)
+#-------------------------------------------------------------------------------
+# How did it go?
+#-------------------------------------------------------------------------------
+onsuccess:
+    print("Workflow finished, no error")
+
+onerror:
+    print("An error occurred, check log at %s." % {log})

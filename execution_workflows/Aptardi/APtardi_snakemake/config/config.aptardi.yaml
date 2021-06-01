@@ -1,0 +1,14 @@
+# Configuration file for aptardi snakemake pipeline
+# last updated 2021-05-29 by CMF
+
+# Dataset samples
+samples: "config/[SAMPLES].csv"
+out_dir: "PATH/TO/[DATASET]/[IDENTIFIER]_[METHOD]"
+
+# Parameters
+aptardi_settings: "config/aptardi_settings.txt"
+
+# Settings
+envs: "workflow/envs"
+local_log: "logs/local_log"
+cluster_log: "logs/cluster_log"
