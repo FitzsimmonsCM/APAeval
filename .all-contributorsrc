@@ -15,7 +15,8 @@
         "eventOrganizing",
         "ideas",
         "review",
-        "talk"
+        "talk",
+        "doc"
       ]
     },
     {
@@ -33,7 +34,8 @@
         "projectManagement",
         "question",
         "review",
-        "talk"
+        "talk",
+        "ideas"
       ]
     },
     {
@@ -186,7 +188,9 @@
         "infra",
         "mentoring",
         "projectManagement",
-        "question"
+        "question",
+        "test",
+        "tutorial"
       ]
     },
     {
@@ -218,6 +222,82 @@
         "ideas",
         "projectManagement",
         "talk"
+      ]
+    },
+    {
+      "login": "lschaerfen",
+      "name": "Leo Schärfen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/76001100?v=4",
+      "profile": "https://github.com/lschaerfen",
+      "contributions": [
+        "code",
+        "ideas",
+        "talk"
+      ]
+    },
+    {
+      "login": "chilampoon",
+      "name": "poonchilam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/43943114?v=4",
+      "profile": "https://chilampoon.github.io",
+      "contributions": [
+        "code",
+        "ideas",
+        "question"
+      ]
+    },
+    {
+      "login": "dseyres",
+      "name": "dseyres",
+      "avatar_url": "https://avatars.githubusercontent.com/u/85220637?v=4",
+      "profile": "https://github.com/dseyres",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "plger",
+      "name": "Pierre-Luc",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9786697?v=4",
+      "profile": "https://github.com/plger",
+      "contributions": [
+        "data",
+        "doc",
+        "eventOrganizing",
+        "ideas",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "SamBryce-Smith",
+      "name": "SamBryce-Smith",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49978382?v=4",
+      "profile": "https://github.com/SamBryce-Smith",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "pinjouwu9325",
+      "name": "Pin-Jou Wu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/41280353?v=4",
+      "profile": "https://github.com/pinjouwu9325",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "yoseopyoon",
+      "name": "yoseopyoon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84806078?v=4",
+      "profile": "https://github.com/yoseopyoon",
+      "contributions": [
+        "code",
+        "ideas"
       ]
     }
   ],
